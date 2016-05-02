@@ -103,7 +103,17 @@ class JenkinsApi {
     
     void wipeOutWorkspace(String jobName) {
         println "wiping out workspace for job $jobName"
-        post("job/${jobName}/doWipeOutWorkspace")
+        try{
+            post("job/${jobName}/doWipeOutWorkspace")
+        }
+        catch(Exception ex)
+        {
+            println "Attempting to stop $jobName since deleting failed"
+            post("job/${jobName}/lastBuild/stop")
+            println "Giving $jobName 30 seconds before deleting again"
+            sleep(30000)
+            post("job/${jobName}/doWipeOutWorkspace")
+        }
     }
 
     void enableJob(String jobName) {
