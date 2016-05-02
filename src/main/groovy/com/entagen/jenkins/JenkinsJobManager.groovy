@@ -64,7 +64,7 @@ class JenkinsJobManager {
             println "Creating missing job: ${missingJob.jobName} from ${missingJob.templateJob.jobName}"
             jenkinsApi.cloneJobForBranch(missingJob, templateJobs)
             jenkinsApi.enableJob(missingJob.jobName)
-            if (startOnCreate) {
+            if (startOnCreate && missingJob.jobName.contains("Rev.com-featurebranch-build-feature")) {
                 jenkinsApi.startJob(missingJob)
             }
         }
