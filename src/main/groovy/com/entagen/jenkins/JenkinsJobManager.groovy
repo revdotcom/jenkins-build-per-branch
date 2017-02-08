@@ -69,8 +69,8 @@ class JenkinsJobManager {
             if (startOnCreate && missingJob.jobName.contains("Rev.com-featurebranch-build-feature")) {
                 jenkinsApi.startJob(missingJob)
             }
-            if (isUnitTestOnly && missingJob.jobName.contains("Rev.com-featurebranch-deploy-feature")) {
-                jenkinsApi.disableJob(missingJob)
+            if (!isUnitTestOnly && !missingJob.jobName.contains("Rev.com-featurebranch-deploy-feature")) {
+                jenkinsApi.enableJob(missingJob.jobName)
             }
         }
     }

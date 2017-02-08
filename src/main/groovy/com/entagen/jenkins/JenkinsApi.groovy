@@ -116,11 +116,6 @@ class JenkinsApi {
         post("job/${jobName}/enable")
     }
 
-    void disableJob(String jobName) {
-        println "disabling job $jobName"
-        post("job/${jobName}/disable")
-    }
-
     void createViewForBranch(BranchView branchView, String nestedWithinView = null) {
         String viewName = branchView.viewName
         Map body = [name: viewName, mode: 'hudson.model.ListView', Submit: 'OK', json: '{"name": "' + viewName + '", "mode": "hudson.model.ListView"}']
