@@ -70,7 +70,7 @@ class JenkinsJobManager {
                 jenkinsApi.startJob(missingJob)
             }
             if (isUnitTestOnly && missingJob.jobName.contains("Rev.com-featurebranch-deploy-feature")) {
-                jenkinsApi.disableJob()
+                jenkinsApi.disableJob(missingJob)
             }
         }
     }
