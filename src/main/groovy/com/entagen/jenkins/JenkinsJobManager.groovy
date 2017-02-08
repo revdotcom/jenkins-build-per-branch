@@ -17,6 +17,7 @@ class JenkinsJobManager {
     Boolean noViews = false
     Boolean noDelete = false
     Boolean startOnCreate = false
+    Boolean isUnitTestOnly = false
 
     JenkinsApi jenkinsApi
     GitApi gitApi
@@ -67,6 +68,9 @@ class JenkinsJobManager {
             jenkinsApi.enableJob(missingJob.jobName)
             if (startOnCreate && missingJob.jobName.contains("Rev.com-featurebranch-build-feature")) {
                 jenkinsApi.startJob(missingJob)
+            }
+            if (isUnitTestOnly && missingJob.jobName.contains("Rev.com-featurebranch-deploy-feature")) {
+                jenkinsApi.disableJob()
             }
         }
     }
