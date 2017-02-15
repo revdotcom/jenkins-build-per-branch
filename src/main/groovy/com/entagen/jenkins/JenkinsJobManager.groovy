@@ -59,9 +59,9 @@ class JenkinsJobManager {
     public void createMissingJobs(List<ConcreteJob> expectedJobs, List<String> currentJobs, List<TemplateJob> templateJobs) {
         println("Template jobs")
         templateJobs.each {
-            println "template job ${it}"
+            println "template job ${it}.jobName"
         }
-        
+
         List<String> lowercaseCurrentJobs = currentJobs.collect()*.toLowerCase()
         List<ConcreteJob> missingJobs = expectedJobs.findAll { !lowercaseCurrentJobs.contains(it.jobName.toLowerCase()) }
         if (!missingJobs) {
