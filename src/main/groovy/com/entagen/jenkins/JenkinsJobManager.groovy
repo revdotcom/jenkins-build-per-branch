@@ -17,7 +17,6 @@ class JenkinsJobManager {
     Boolean noViews = false
     Boolean noDelete = false
     Boolean startOnCreate = false
-    Boolean isUnitTestOnly = false
 
     JenkinsApi jenkinsApi
     GitApi gitApi
@@ -60,15 +59,24 @@ class JenkinsJobManager {
     public void createMissingJobs(List<ConcreteJob> expectedJobs, List<String> currentJobs, List<TemplateJob> templateJobs) {
         List<String> lowercaseCurrentJobs = currentJobs.collect()*.toLowerCase()
         List<ConcreteJob> missingJobs = expectedJobs.findAll { !lowercaseCurrentJobs.contains(it.jobName.toLowerCase()) }
-        if (!missingJobs) return
+        if (!missingJobs) {
+            println "No missing jobs found."
+            return
+        }
 
         for(ConcreteJob missingJob in missingJobs) {
             println "Creating missing job: ${missingJob.jobName} from ${missingJob.templateJob.jobName}"
             jenkinsApi.cloneJobForBranch(missingJob, templateJobs)
-            if (!isUnitTestOnly && !missingJob.jobName.contains("Rev.com-featurebranch-deploy-feature")) {
+            // Rev.com-branch is -DtemplateJobPrefix
+            // Rev.com-branch-deploy- is the Jenkins job template
+            // Rev.com-branch-build- is the Jenkins job template
+            if (!missingJob.jobName.contains("Rev.com-branch-deploy-unittest")) {
+                // If the job doesn't contain unittest enable it
                 jenkinsApi.enableJob(missingJob.jobName)
             }
+            // Old pattern "Rev.com-featurebranch-build-feature"
             if (startOnCreate && missingJob.jobName.contains("Rev.com-featurebranch-build-feature")) {
+                // Starting -build- has the downstream job of -deploy- when successful.
                 jenkinsApi.startJob(missingJob)
             }
         }
