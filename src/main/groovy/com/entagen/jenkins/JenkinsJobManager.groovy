@@ -71,11 +71,18 @@ class JenkinsJobManager {
 
         for(ConcreteJob missingJob in missingJobs) {
             println "Creating missing job: ${missingJob.jobName} from ${missingJob.templateJob.jobName}"
+
+            // This creates missing jobs using the missingJob name. Note that templateJobs is a List.
             jenkinsApi.cloneJobForBranch(missingJob, templateJobs)
+
             // Rev.com-branch is -DtemplateJobPrefix
             // Rev.com-branch-deploy- is the Jenkins job template
             // Rev.com-branch-build- is the Jenkins job template
 
+            if (missingJob.jobName.contains("Rev.com-branch-build-unittest")) {
+                // If the job contains unittest enable it. Jobs start out disabled so -deploy- will remain disabled.
+                jenkinsApi.enableJob(missingJob.jobName)
+            }
             if (!missingJob.jobName.contains("Rev.com-branch-deploy-unittest")) {
                 // If the job doesn't contain unittest enable it. Jobs start out disabled.
                 jenkinsApi.enableJob(missingJob.jobName)
