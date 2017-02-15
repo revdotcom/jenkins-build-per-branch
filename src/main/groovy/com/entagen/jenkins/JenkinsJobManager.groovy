@@ -57,6 +57,11 @@ class JenkinsJobManager {
     }
 
     public void createMissingJobs(List<ConcreteJob> expectedJobs, List<String> currentJobs, List<TemplateJob> templateJobs) {
+        println("Template jobs")
+        templateJobs.each {
+            println "template job ${it}"
+        }
+        
         List<String> lowercaseCurrentJobs = currentJobs.collect()*.toLowerCase()
         List<ConcreteJob> missingJobs = expectedJobs.findAll { !lowercaseCurrentJobs.contains(it.jobName.toLowerCase()) }
         if (!missingJobs) {
@@ -70,12 +75,12 @@ class JenkinsJobManager {
             // Rev.com-branch is -DtemplateJobPrefix
             // Rev.com-branch-deploy- is the Jenkins job template
             // Rev.com-branch-build- is the Jenkins job template
+
             if (!missingJob.jobName.contains("Rev.com-branch-deploy-unittest")) {
-                // If the job doesn't contain unittest enable it
+                // If the job doesn't contain unittest enable it. Jobs start out disabled.
                 jenkinsApi.enableJob(missingJob.jobName)
             }
-            // Old pattern "Rev.com-featurebranch-build-feature"
-            if (startOnCreate && missingJob.jobName.contains("Rev.com-featurebranch-build-feature")) {
+            if (startOnCreate && missingJob.jobName.contains("Rev.com-branch-build-")) {
                 // Starting -build- has the downstream job of -deploy- when successful.
                 jenkinsApi.startJob(missingJob)
             }
