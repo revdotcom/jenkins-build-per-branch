@@ -46,6 +46,8 @@ class JenkinsApi {
     }
 
     String getJobConfig(String jobName) {
+        // Please note that for this to work it requires that the authenticated user have ExtendedRead permission or it
+        // will return HTTP 403 (Forbidden). See `/role-strategy/manage-roles`.
         def response = get(path: "job/${jobName}/config.xml", contentType: TEXT,
                 headers: [Accept: 'application/xml'])
         response.data.text
