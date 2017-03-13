@@ -64,12 +64,12 @@ class JenkinsApi {
     }
 
     void startJob(ConcreteJob job) {
-        println "Starting job ${job.jobName}."
+        println "Starting job ${job.jobName}"
         post('job/' + job.jobName + '/build')
     }
     
     void startJobWithParameters(String jobName, postBody = [:]) {
-        println "Starting job ${jobName}."
+        println "Starting job ${jobName}"
         post('job/' + jobName + '/build', postBody)
     }
 
