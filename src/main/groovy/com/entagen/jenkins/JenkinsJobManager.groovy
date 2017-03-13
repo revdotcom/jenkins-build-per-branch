@@ -84,8 +84,11 @@ class JenkinsJobManager {
                 jenkinsApi.enableJob(missingJob.jobName)
             }
             if (!missingJob.jobName.contains("Rev.com-deploy-unittest")) {
-                // If the job doesn't contain unittest enable it. Jobs start out disabled.
-                jenkinsApi.enableJob(missingJob.jobName)
+                // Prevent double enabling of unittest jobs.
+                if (!missingJob.jobName.contains("Rev.com-build-unittest")) {
+                    // If the job doesn't contain unittest enable it. Jobs start out disabled.
+                    jenkinsApi.enableJob(missingJob.jobName)
+                }
             }
             if (startOnCreate && missingJob.jobName.contains("Rev.com-build-")) {
                 // Starting -build- has the downstream job of -deploy- when successful.
