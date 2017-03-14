@@ -4,6 +4,7 @@ import java.util.regex.Pattern
 import groovy.json.JsonSlurper
 
 class JenkinsJobManager {
+
     String templateJobPrefix
     String templateBranchName
     String gitUrl
@@ -57,17 +58,9 @@ class JenkinsJobManager {
     }
 
     public void createMissingJobs(List<ConcreteJob> expectedJobs, List<String> currentJobs, List<TemplateJob> templateJobs) {
-        println("Template jobs:")
-        for (templateJob in templateJobs) {
-            println templateJob.dump()
-        }
-
         List<String> lowercaseCurrentJobs = currentJobs.collect()*.toLowerCase()
         List<ConcreteJob> missingJobs = expectedJobs.findAll { !lowercaseCurrentJobs.contains(it.jobName.toLowerCase()) }
-        if (!missingJobs) {
-            println "No missing jobs found."
-            return
-        }
+        if (!missingJobs) return
 
         for(ConcreteJob missingJob in missingJobs) {
             println "Creating missing job: ${missingJob.jobName} from ${missingJob.templateJob.jobName}"
