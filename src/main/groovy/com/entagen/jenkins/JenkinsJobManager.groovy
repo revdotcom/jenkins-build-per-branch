@@ -56,7 +56,7 @@ class JenkinsJobManager {
         List<String> nonTemplateBranchNames = allBranchNames - templateBranchName
         List<ConcreteJob> expectedJobs = this.expectedJobs(templateJobs, nonTemplateBranchNames)
 
-        createMissingJobs(expectedJobs, currentTemplateDrivenJobNames, templateJobs)
+       // createMissingJobs(expectedJobs, currentTemplateDrivenJobNames, templateJobs)
         if (!noDelete) {
             deleteDeprecatedJobs(currentTemplateDrivenJobNames - expectedJobs.jobName)
         }
@@ -153,7 +153,7 @@ class JenkinsJobManager {
         List<BranchView> expectedBranchViews = allBranchNames.collect { String branchName -> new BranchView(branchName: branchName, templateJobPrefix: this.templateJobPrefix) }
 
         List<BranchView> missingBranchViews = expectedBranchViews.findAll { BranchView branchView -> !existingViewNames.contains(branchView.viewName)}
-        addMissingViews(missingBranchViews)
+      //  addMissingViews(missingBranchViews)
 
         if (!noDelete) {
             List<String> deprecatedViewNames = getDeprecatedViewNames(existingViewNames, expectedBranchViews)
